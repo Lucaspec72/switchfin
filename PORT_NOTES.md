@@ -46,6 +46,13 @@ containers are `--rm`).
   About. Tag NX2 releases `v1.0.0`, `v1.0.1`, … — they will always compare
   above upstream's 0.x line, and the version can't collide with upstream's
   own numbering.
+- **GitHub links retargeted** (`config.hpp` `git_repo`): Switch 2 builds
+  point at **`Lucaspec72/switchfin`** (Settings → GitHub link, update
+  endpoints); upstream keeps `dragonflylee/switchfin` everywhere else.
+- **AV1 preferred** on Switch 2: default transcode codec (`mpv_core.hpp`
+  `VIDEO_CODEC`) is `av1` instead of `h264`, and the DirectPlay device
+  profile lists `av1,h264,hevc,vp9` (the Switch 2 decodes AV1 in hardware).
+  A codec explicitly chosen in Settings is honoured as before.
 - **Self-update disabled on Switch 2** (`version.cpp` `checkUpdate`): the
   updater pulls `SwitchfinNX2.nro` from the *upstream* repo, which will not
   exist (and upstream assets are Switch 1 builds anyway) — it shows a
