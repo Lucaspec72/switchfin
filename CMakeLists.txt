@@ -72,7 +72,7 @@ if (PLATFORM_SWITCH2)
     # 0.9.5 base) so NX2 releases never collide with upstream versions.
     set(VERSION_MAJOR "1")
     set(VERSION_MINOR "0")
-    set(VERSION_ALTER "0")
+    set(VERSION_ALTER "1")
     set(PROJECT_NAME "SwitchfinNX2")
     set(NX2_TITLE "Switchfin NX2")
     # Switch 2 port: the homebrew-menu tile credits the porter; all other

@@ -147,15 +147,12 @@ bool AppVersion::needUpdate(const std::string& latestVersion) {
 }
 
 void AppVersion::checkUpdate(int delay, bool showUpToDateDialog) {
-#ifdef __SWITCH2__
-    // Switch 2 port: in-app self-update is disabled - upstream's release
-    // assets are Switch 1 NROs and would clobber this build. Grab new
-    // Switchfin NX2 builds from the port's own releases instead.
-    brls::Logger::info("checkUpdate is disabled in the Switch 2 port");
-    if (showUpToDateDialog)
-        brls::sync([]() { Dialog::show("Switchfin NX2: in-app updates are disabled.\nInstall new builds manually."); });
-    return;
-#endif
+    // Switch 2 port: updates come from this fork's own releases
+    // (git_repo below, set in config.hpp); the release must carry an asset
+    // named SwitchfinNX2.nro. The updated NRO lands in the app's config dir
+    // (sdmc:/switch/SwitchfinNX2/), so install the app under
+    // sdmc:/switch/SwitchfinNX2/SwitchfinNX2.nro for the update to replace
+    // the file hbmenu launches.
     if (!AppVersion::updating->load()) {
         Dialog::cancelable("main/setting/others/updating"_i18n, [] { AppVersion::updating->store(true); });
         return;

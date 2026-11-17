@@ -53,18 +53,22 @@ containers are `--rm`).
   `VIDEO_CODEC`) is `av1` instead of `h264`, and the DirectPlay device
   profile lists `av1,h264,hevc,vp9` (the Switch 2 decodes AV1 in hardware).
   A codec explicitly chosen in Settings is honoured as before.
-- **Self-update disabled on Switch 2** (`version.cpp` `checkUpdate`): the
-  updater pulls `SwitchfinNX2.nro` from the *upstream* repo, which will not
-  exist (and upstream assets are Switch 1 builds anyway) — it shows a
-  "disabled" dialog instead. `getPlatform()` returns "NX2" for this build
+- **Self-update re-enabled (2026-11-17, v1.0.1)**: the updater now points at
+  this fork (`Lucaspec72/switchfin`, via `config.hpp` `git_repo`) and
+  expects an asset named `SwitchfinNX2.nro` on a `v1.0.x` tag. The download
+  lands in `sdmc:/switch/SwitchfinNX2/` — so the app should be installed at
+  `sdmc:/switch/SwitchfinNX2/SwitchfinNX2.nro` for the update to replace the
+  file hbmenu launches (same store-style layout upstream's updater assumes
+  for hb-appstore installs). `getPlatform()` returns "NX2" for this build
   (User-Agent / device label on the Jellyfin server).
 - **Quit returns to hbmenu** (`borealis .../switch_platform.cpp`
   `exitToHomeMode`): upstream sets libnx's `__nx_applet_exit_mode` so the
   app exits to the console HOME menu; the NX2 build ignores it and keeps
   libounce's default (return to the homebrew menu that launched the NRO).
-- **Identity:** the Switch 2 NRO's homebrew-menu author (NACP) is
-  **Lucaspec72** (the porter); the app title stays "Switchfin" and all
-  upstream identity/credits (title id, package name, README) are untouched.
+- **Identity summary:** Switch 2 builds are **Switchfin NX2 v1.0.x** by
+  **Lucaspec72** (NACP), config dir `sdmc:/switch/SwitchfinNX2/`, GitHub
+  links at `Lucaspec72/switchfin`; upstream's own identity/credits
+  (title ids, package, README body) are untouched.
 
 ## Display resolution (Switch 2 native res)
 
@@ -124,10 +128,20 @@ to 1080p would be a one-line change in the same two spots.
      Switch 2 defines.
 2. Top-level `CMakeLists.txt`: `switch_wrapper.c` compiled for Switch 2 as
    well; the `.nro` creation target runs for Switch 2 too (same nacptool /
-   elf2nro commands — they exist in the devkit image regardless of target).
-3. `portns2.ps1`: Docker build wrapper (this file's subject).
-4. `README.md`: AI-port disclaimer + Switch 2 build section.
-5. `.gitignore`: `build_ns2/`, `ns2/` (cache + build artifacts).
+   elf2nro commands — they exist in the devkit image regardless of target);
+   Switch 2 identity block (version 1.0.x, `SwitchfinNX2`, "Switchfin NX2",
+   author).
+3. `app/src/utils/version.cpp`: `getPlatform()` returns "NX2"; the updater
+   is active and points at the fork's releases (see identity section).
+3. `app/include/utils/config.hpp`: `git_repo` = `Lucaspec72/switchfin` for
+   Switch 2 builds (upstream default kept elsewhere).
+4. `app/include/view/mpv_core.hpp` + `app/src/activity/player_view.cpp`:
+   default transcode codec AV1 + DirectPlay profile `av1,h264,hevc,vp9` on
+   Switch 2 (Switch 1 keeps `h264` / `h264,hevc,av1,vp9`).
+5. `portns2.ps1`: Docker build wrapper (this file's subject).
+6. `README.md`: AI-port disclaimer + Switch 2 build section;
+   `CHANGELOG-NX2.md` for port release notes.
+7. `.gitignore`: `build_ns2/`, `ns2/` (cache + build artifacts).
 
 App/borealis C++ source files: **zero changes so far.**
 
