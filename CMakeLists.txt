@@ -68,6 +68,11 @@ set(VITA_VERSION "00.95")
 # everything as-is.
 set(NX2_TITLE ${PROJECT_NAME})
 if (PLATFORM_SWITCH2)
+    # The port carries its own version line (independent from upstream's
+    # 0.9.5 base) so NX2 releases never collide with upstream versions.
+    set(VERSION_MAJOR "1")
+    set(VERSION_MINOR "0")
+    set(VERSION_ALTER "0")
     set(PROJECT_NAME "SwitchfinNX2")
     set(NX2_TITLE "Switchfin NX2")
     # Switch 2 port: the homebrew-menu tile credits the porter; all other

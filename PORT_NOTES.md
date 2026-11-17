@@ -41,6 +41,11 @@ containers are `--rm`).
   Switchfin), while the homebrew-menu tile reads **"Switchfin NX2"**
   (NACP name, via a dedicated `NX2_TITLE`). Author (NACP) = **Lucaspec72**.
   Upstream identity/credits elsewhere are untouched.
+- **Version: the port carries its own line, `1.0.0`** (upstream base is
+  0.9.5). NACP/display version = 1.0.0, shown by hbmenu and Settings →
+  About. Tag NX2 releases `v1.0.0`, `v1.0.1`, … — they will always compare
+  above upstream's 0.x line, and the version can't collide with upstream's
+  own numbering.
 - **Self-update disabled on Switch 2** (`version.cpp` `checkUpdate`): the
   updater pulls `SwitchfinNX2.nro` from the *upstream* repo, which will not
   exist (and upstream assets are Switch 1 builds anyway) — it shows a
