@@ -62,6 +62,11 @@ set(PACKAGE_NAME "fun.dragonfly.switchfin")
 set(VITA_TITLEID "SWITCHFIN")
 set(PSN_TITLE_ID "SFIN00000")
 set(VITA_VERSION "00.95")
+if (PLATFORM_SWITCH2)
+    # Switch 2 port: the homebrew-menu tile credits the porter; all other
+    # identity (title, package, title ids) and upstream credits stay intact.
+    set(PROJECT_AUTHOR "Lucaspec72")
+endif ()
 set(PROJECT_ICON ${CMAKE_CURRENT_SOURCE_DIR}/resources/icon/icon.jpg)
 set(PROJECT_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/resources)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")

@@ -8,13 +8,13 @@ Switchfin is third-party PC player for Jellyfin that provides a native user inte
 > [!WARNING]
 > **Nintendo Switch 2 build — unofficial AI-generated port**
 > The Switch 2 support in this fork was created **entirely by AI** (OpenCode
-> running GLM-5.3): the porting work, build tooling and documentation are all
-> machine-generated. It is **unofficial** — not affiliated with, endorsed by,
-> or reviewed by the original author. It is **untested on real Switch 2
-> hardware** so far (it builds; on-console validation is pending — see
-> [`PORT_NOTES.md`](PORT_NOTES.md) for what is known and what is not). Expect
-> bugs, and use at your own risk. For the supported Switch 1 experience, use
-> the original upstream releases below.
+> running GLM-5.3), ported by **Lucaspec72**: the porting work, build tooling
+> and documentation are all machine-generated. It is **unofficial** — not
+> affiliated with, endorsed by, or reviewed by the original author. It is
+> **untested on real Switch 2 hardware** so far (it builds; on-console
+> validation is pending — see [`PORT_NOTES.md`](PORT_NOTES.md) for what is
+> known and what is not). Expect bugs, and use at your own risk. For the
+> supported Switch 1 experience, use the original upstream releases below.
 
 [![build](https://github.com/dragonflylee/switchfin/actions/workflows/build.yaml/badge.svg)](https://github.com/dragonflylee/switchfin/actions/workflows/build.yaml)
 [![NS](https://img.shields.io/badge/-Nintendo%20Switch-e4000f?style=flat&logo=Nintendo%20Switch)](https://hb-app.store/switch/Switchfin)

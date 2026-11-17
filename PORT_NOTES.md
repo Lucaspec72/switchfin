@@ -34,6 +34,9 @@ containers are `--rm`).
   Switch code paths (`__SWITCH__` gates) compile unchanged; `__SWITCH2__`
   (added automatically by the libounce toolchain, and in borealis' branch)
   gates Switch 2 specifics. App source files did not need any edits.
+- **Identity:** the Switch 2 NRO's homebrew-menu author (NACP) is
+  **Lucaspec72** (the porter); the app title stays "Switchfin" and all
+  upstream identity/credits (title id, package name, README) are untouched.
 - **Graphics: the borealis GLFW + mpv-OpenGL path.** On Switch the borealis
   GLFW branch requests **GL 4.3 core** through devkitPro's `switch-glfw`
   (3.3.4, whose Switch backend needs only `applet*`/`hid*`/`nwindow*`/EGL —
