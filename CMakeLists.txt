@@ -74,8 +74,8 @@ endif ()
 
 # setting src and include
 file(GLOB_RECURSE MAIN_SRC "${PROJECT_SOURCE_DIR}/app/src/*.cpp")
-if (PLATFORM_SWITCH)
-    # System service initialization functions required for libnx
+if (PLATFORM_SWITCH OR PLATFORM_SWITCH2)
+    # System service initialization functions required for libnx/libounce
     list(APPEND MAIN_SRC ${BOREALIS_LIBRARY}/lib/platforms/switch/switch_wrapper.c)
 elseif (PLATFORM_PS4)
     # Show backtrace when app crash
@@ -265,8 +265,8 @@ if (PLATFORM_DESKTOP)
         )
     endif()
 
-elseif (PLATFORM_SWITCH)
-    if (BUILTIN_NSP)
+elseif (PLATFORM_SWITCH OR PLATFORM_SWITCH2)
+    if (PLATFORM_SWITCH AND BUILTIN_NSP)
         add_dependencies(${PROJECT_NAME} forwarder.nsp)
     endif ()
     if (USE_DEKO3D)

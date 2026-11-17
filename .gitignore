@@ -1,4 +1,5 @@
 build*/
+/ns2/
 /.idea/
 /cmake-*/
 /.xmake/

@@ -5,6 +5,17 @@
 Switchfin is third-party PC player for Jellyfin that provides a native user interface to browse and play movies and series.
 <br>
 
+> [!WARNING]
+> **Nintendo Switch 2 build — unofficial AI-generated port**
+> The Switch 2 support in this fork was created **entirely by AI** (OpenCode
+> running GLM-5.3): the porting work, build tooling and documentation are all
+> machine-generated. It is **unofficial** — not affiliated with, endorsed by,
+> or reviewed by the original author. It is **untested on real Switch 2
+> hardware** so far (it builds; on-console validation is pending — see
+> [`PORT_NOTES.md`](PORT_NOTES.md) for what is known and what is not). Expect
+> bugs, and use at your own risk. For the supported Switch 1 experience, use
+> the original upstream releases below.
+
 [![build](https://github.com/dragonflylee/switchfin/actions/workflows/build.yaml/badge.svg)](https://github.com/dragonflylee/switchfin/actions/workflows/build.yaml)
 [![NS](https://img.shields.io/badge/-Nintendo%20Switch-e4000f?style=flat&logo=Nintendo%20Switch)](https://hb-app.store/switch/Switchfin)
 [![PSVita](https://img.shields.io/badge/-PSVita-003791?style=flat&logo=PlayStation)](https://www.rinnegatamante.eu/vitadb/#/info/1258)
@@ -180,6 +191,27 @@ cmake -B build_switch -DPLATFORM_SWITCH=ON
 make -C build_switch Switchfin.nro -j$(nproc)
 # Debug with nxlink
 nxlink -a <YOUR_IP> -p Switchfin/Switchfin.nro -s Switchfin.nro --args -d -v
+```
+
+### Nintendo Switch 2 (unofficial port)
+
+Requires **Docker Desktop** and the Switch 2 devkit drop (`ounce-devkit-<date>`
+with `libounce/` + `portlibs/switch2/`) in this folder or any parent — see
+[`PORT_NOTES.md`](PORT_NOTES.md). The wrapper installs upstream's prebuilt
+Switch portlibs (mpv/ffmpeg/curl/...) into the devkitPro image automatically.
+
+```powershell
+.\portns2.ps1 build       # -> build_ns2/Switchfin.nro
+.\portns2.ps1 shell       # interactive build container
+```
+
+Alternatively, configure by hand inside the container
+(`source /devkit/switch2vars.sh` with the devkit drop mounted):
+
+```bash
+aarch64-none-elf-cmake -S . -B build_ns2 -G Ninja -DPLATFORM_SWITCH2=ON \
+  -DUSE_LIBUSBHSFS=OFF -DUSE_MUPDF=OFF -DBUILTIN_NSP=OFF
+cmake --build build_ns2 --target Switchfin.nro
 ```
 
 ### Linux / macOS / Windows (Desktop)
