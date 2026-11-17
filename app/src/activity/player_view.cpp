@@ -233,7 +233,11 @@ void PlayerView::playMedia(const uint64_t seekTicks) {
                 },
                 {
                     {"Type", "Video"},
-#ifdef __SWITCH__
+#ifdef __SWITCH2__
+                    // Switch 2: prefer AV1 (hardware-decodable on this
+                    // console) ahead of h264/hevc.
+                    {"VideoCodec", "av1,h264,hevc,vp9"},
+#elif defined(__SWITCH__)
                     {"VideoCodec", "h264,hevc,av1,vp9"},
 #elif defined(__PSV__)
                     {"AudioCodec", "aac,mp3"},

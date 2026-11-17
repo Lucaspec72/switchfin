@@ -17,7 +17,13 @@ public:
     static void checkUpdate(int delay = 2000, bool showUpToDateDialog = false);
 
     inline static std::shared_ptr<std::atomic_bool> updating = std::make_shared<std::atomic_bool>(true);
+#ifdef __SWITCH2__
+    // Switch 2 port: point the GitHub link (and any update endpoints) at the
+    // port's own repository, not the original project.
+    inline static std::string git_repo = "Lucaspec72/switchfin";
+#else
     inline static std::string git_repo = "dragonflylee/switchfin";
+#endif
 };
 
 struct AppUser {

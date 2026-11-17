@@ -147,7 +147,14 @@ public:
 #else
     inline static std::string VO = "libmpv";
 #endif
+#ifdef __SWITCH2__
+    // Switch 2: AV1 is the default transcode target - the console has
+    // hardware AV1 decode (and dav1d software fallback), so servers serving
+    // AV1 transcodes are handled better than on Switch 1.
+    inline static std::string VIDEO_CODEC = "av1";
+#else
     inline static std::string VIDEO_CODEC = "h264";
+#endif
     inline static int64_t VIDEO_QUALITY = 0;
 
     inline static bool FORCE_DIRECTPLAY = false;
