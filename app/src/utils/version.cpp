@@ -58,7 +58,9 @@ std::string AppVersion::getPackageName() { return STR(BUILD_PACKAGE_NAME); }
 std::string AppVersion::getCommit() { return STR(BUILD_TAG_SHORT); }
 
 std::string AppVersion::getPlatform() {
-#ifdef __SWITCH__
+#ifdef __SWITCH2__
+    return "NX2";
+#elif defined(__SWITCH__)
     return "NX";
 #elif defined(__PSV__)
     return "PSVita";
@@ -145,6 +147,15 @@ bool AppVersion::needUpdate(const std::string& latestVersion) {
 }
 
 void AppVersion::checkUpdate(int delay, bool showUpToDateDialog) {
+#ifdef __SWITCH2__
+    // Switch 2 port: in-app self-update is disabled - upstream's release
+    // assets are Switch 1 NROs and would clobber this build. Grab new
+    // Switchfin NX2 builds from the port's own releases instead.
+    brls::Logger::info("checkUpdate is disabled in the Switch 2 port");
+    if (showUpToDateDialog)
+        brls::sync([]() { Dialog::show("Switchfin NX2: in-app updates are disabled.\nInstall new builds manually."); });
+    return;
+#endif
     if (!AppVersion::updating->load()) {
         Dialog::cancelable("main/setting/others/updating"_i18n, [] { AppVersion::updating->store(true); });
         return;

@@ -89,7 +89,7 @@ switch ($Action) {
             "-DPLATFORM_SWITCH2=ON -DCMAKE_BUILD_TYPE=Release " +
             "-DUSE_LIBUSBHSFS=OFF -DUSE_MUPDF=OFF -DBUILTIN_NSP=OFF " +
             "-DVERSION_BUILD=0 $extra " +
-            "&& cmake --build $BuildDir --target Switchfin.nro")
+            "&& cmake --build $BuildDir --target SwitchfinNX2.nro")
     }
     "clean" {
         Remove-Item -Recurse -Force (Join-Path $Root $BuildDir) -ErrorAction SilentlyContinue

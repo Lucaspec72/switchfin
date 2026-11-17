@@ -15,6 +15,9 @@ Switchfin is third-party PC player for Jellyfin that provides a native user inte
 > validation is pending — see [`PORT_NOTES.md`](PORT_NOTES.md) for what is
 > known and what is not). Expect bugs, and use at your own risk. For the
 > supported Switch 1 experience, use the original upstream releases below.
+> The Switch 2 build is branded **Switchfin NX2** (separate executable, SD
+> config dir and homebrew tile) so it can never be confused with upstream
+> Switchfin — including if upstream ships its own official Switch 2 support.
 
 [![build](https://github.com/dragonflylee/switchfin/actions/workflows/build.yaml/badge.svg)](https://github.com/dragonflylee/switchfin/actions/workflows/build.yaml)
 [![NS](https://img.shields.io/badge/-Nintendo%20Switch-e4000f?style=flat&logo=Nintendo%20Switch)](https://hb-app.store/switch/Switchfin)
@@ -201,7 +204,7 @@ with `libounce/` + `portlibs/switch2/`) in this folder or any parent — see
 Switch portlibs (mpv/ffmpeg/curl/...) into the devkitPro image automatically.
 
 ```powershell
-.\portns2.ps1 build       # -> build_ns2/Switchfin.nro
+.\portns2.ps1 build       # -> build_ns2/SwitchfinNX2.nro
 .\portns2.ps1 shell       # interactive build container
 ```
 

@@ -62,7 +62,14 @@ set(PACKAGE_NAME "fun.dragonfly.switchfin")
 set(VITA_TITLEID "SWITCHFIN")
 set(PSN_TITLE_ID "SFIN00000")
 set(VITA_VERSION "00.95")
+# Switch 2 port identity: a distinct target/file name and config dir so this
+# fork never collides with an installed upstream Switchfin; the homebrew-menu
+# title gets a friendlier form with a space. Upstream platforms keep
+# everything as-is.
+set(NX2_TITLE ${PROJECT_NAME})
 if (PLATFORM_SWITCH2)
+    set(PROJECT_NAME "SwitchfinNX2")
+    set(NX2_TITLE "Switchfin NX2")
     # Switch 2 port: the homebrew-menu tile credits the porter; all other
     # identity (title, package, title ids) and upstream credits stay intact.
     set(PROJECT_AUTHOR "Lucaspec72")
@@ -278,7 +285,7 @@ elseif (PLATFORM_SWITCH OR PLATFORM_SWITCH2)
         gen_dksh("${PROJECT_RESOURCES}/shaders")
     endif ()
     add_custom_target(${PROJECT_NAME}.nro DEPENDS ${PROJECT_NAME}
-        COMMAND ${NX_NACPTOOL_EXE} --create "${PROJECT_NAME}" "${PROJECT_AUTHOR}" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_ALTER}" ${PROJECT_NAME}.nacp
+        COMMAND ${NX_NACPTOOL_EXE} --create "${NX2_TITLE}" "${PROJECT_AUTHOR}" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_ALTER}" ${PROJECT_NAME}.nacp
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_RESOURCES} ${CMAKE_BINARY_DIR}/resources
         COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/resources/font/keymap*.ttf ${CMAKE_BINARY_DIR}/resources/font/*_fallback.ttf ${CMAKE_BINARY_DIR}/resources/font/switch_font.ttf
         COMMAND ${NX_ELF2NRO_EXE} ${PROJECT_NAME}.elf ${PROJECT_NAME}.nro --icon=${PROJECT_ICON} --nacp=${PROJECT_NAME}.nacp --romfsdir=${CMAKE_BINARY_DIR}/resources

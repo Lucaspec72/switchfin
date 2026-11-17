@@ -33,10 +33,41 @@ containers are `--rm`).
 - **`PLATFORM_SWITCH2` keeps `-D__SWITCH__` defined.** All app and borealis
   Switch code paths (`__SWITCH__` gates) compile unchanged; `__SWITCH2__`
   (added automatically by the libounce toolchain, and in borealis' branch)
-  gates Switch 2 specifics. App source files did not need any edits.
+  gates Switch 2 specifics. App source files: only `version.cpp` changed
+  (see identity below).
+- **Rebrand: "Switchfin NX2".** `PROJECT_NAME` becomes `SwitchfinNX2` for
+  Switch 2 builds (target, `SwitchfinNX2.nro`, config dir
+  `sdmc:/switch/SwitchfinNX2` — fully separate from an installed upstream
+  Switchfin), while the homebrew-menu tile reads **"Switchfin NX2"**
+  (NACP name, via a dedicated `NX2_TITLE`). Author (NACP) = **Lucaspec72**.
+  Upstream identity/credits elsewhere are untouched.
+- **Self-update disabled on Switch 2** (`version.cpp` `checkUpdate`): the
+  updater pulls `SwitchfinNX2.nro` from the *upstream* repo, which will not
+  exist (and upstream assets are Switch 1 builds anyway) — it shows a
+  "disabled" dialog instead. `getPlatform()` returns "NX2" for this build
+  (User-Agent / device label on the Jellyfin server).
+- **Quit returns to hbmenu** (`borealis .../switch_platform.cpp`
+  `exitToHomeMode`): upstream sets libnx's `__nx_applet_exit_mode` so the
+  app exits to the console HOME menu; the NX2 build ignores it and keeps
+  libounce's default (return to the homebrew menu that launched the NRO).
 - **Identity:** the Switch 2 NRO's homebrew-menu author (NACP) is
   **Lucaspec72** (the porter); the app title stays "Switchfin" and all
   upstream identity/credits (title id, package name, README) are untouched.
+
+## Display resolution (Switch 2 native res)
+
+Upstream's Switch 1 GLFW path renders a fixed 1280x720 window (Switch 1
+panel size) — on the Switch 2's 1080p handheld display that showed up as a
+720p box anchored bottom-left. `borealis .../glfw/glfw_video.cpp` now has a
+`__SWITCH2__` path that mirrors what the Switch 1 deko3d path does:
+- constructor: initial window size = `appletGetDefaultDisplayResolution()`
+  (1080p handheld; whatever the docked display is — up to 4K on Switch 2),
+- `beginFrame()`: polls the same call and `glfwSetWindowSize` on docking
+  changes; the framebuffer-size callback then updates the borealis layout
+  (virtual canvas = native res, scaleFactor 1 — same as docked Switch 1).
+Note: the UI (nanovg over GL) now draws at native resolution; 4K docked
+performance is untested — if it's too heavy, capping the queried resolution
+to 1080p would be a one-line change in the same two spots.
 - **Graphics: the borealis GLFW + mpv-OpenGL path.** On Switch the borealis
   GLFW branch requests **GL 4.3 core** through devkitPro's `switch-glfw`
   (3.3.4, whose Switch backend needs only `applet*`/`hid*`/`nwindow*`/EGL —
