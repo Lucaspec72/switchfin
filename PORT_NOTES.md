@@ -121,7 +121,7 @@ App/borealis C++ source files: **zero changes so far.**
 
 ## Build status log
 
-- **Switchfin.nro: BUILDS.** `build_ns2/Switchfin.nro` (~42.7 MB) via
+- **SwitchfinNX2.nro: BUILDS.** `build_ns2/SwitchfinNX2.nro` (~42.7 MB) via
   `.\portns2.ps1 build` (2026-11-17, first try beyond toolchain plumbing:
   one fix needed — the borealis Switch 2 branch needs `-I portlibs/switch/include`
   back in the flags for the GLFW headers; it lands after libounce/switch2's
@@ -129,42 +129,39 @@ App/borealis C++ source files: **zero changes so far.**
 - **Link verified** (`nm` on the final ELF): 0 undefined symbols; 384
   mimalloc symbols (so `-lnx` = libounce), 1205 zink/nvk symbols (OunceVK GL
   in the binary), glfw/mpv/egl all present. No deko3d symbols anywhere.
-- **Compile-clean against libounce, zero source edits:** all of borealis
+- **Compile-clean against libounce, zero app source edits:** all of borealis
   `lib/platforms/switch/*` (platform/input/ime/font/audio) and the whole app
   compiled unchanged; libpulsar (audren API) compiles against libounce
   headers too.
-- **First on-console test is the next milestone** — see the open-risks
-  checklist below (GL 4.3 core via Zink/NVK, nvtegra hwdec fallback to
-  software, pl:u shared fonts, audren).
+- **TESTED ON CONSOLE (2026-11-17): WORKING.** UI renders fullscreen at the
+  native display resolution (native-res fix confirmed necessary — the 720p
+  Switch 1 window path rendered as a box on the Switch 2 display), exit
+  returns to hbmenu, playback works. The porter reports it working fine
+  overall; treat remaining edge cases (4K docked performance, hardware
+  decode vs software fallback, exotic codecs) as unexplored details rather
+  than blockers.
 
-## Open risks / on-console TODO (first Switchfin.nro test)
+## On-console results + remaining unknowns
 
-- [ ] **GL 4.3 core via Zink/NVK**: borealis requests a 4.3 core context;
-      OunceVK is Zink over NVK. If the context comes back lower/fails, add a
-      `USE_GLES3` fallback (GLES 3.1, borealis + nanovg already support it).
-- [ ] **nvtegra hardware decode**: upstream's ffmpeg is built with
-      `--enable-nvtegra` (Switch 1 NVDEC hwaccel). On Switch 2 the decode
-      service is the new `viddec` (switch2/services/viddec.h) — the nvtegra
-      hwaccel will likely fail at runtime and fall back to software decode.
-      An A78C at 1080p H.264/HEVC software decode should be workable; AV1 via
-      dav1d is software too. A proper port would wire mpv/ffmpeg to the
-      `VideoDecoder` (libounce switch2/video/decoder.h) later.
-- [ ] **pl:u shared fonts** (`switch_font.cpp`, `config.cpp`): if shared
-      fonts are gone on the Switch 2 OS, CJK text falls back to bundled
-      fonts; verify `plGetSharedFontByType` behaviour on console.
-- [ ] **audren**: mpv audio goes through the audren shim (via ffmpeg
-      libavdevice? — verify which output mpv uses). If audren doesn't work on
-      Switch 2, port to `audu` (switch2/services/audu.h).
-- [ ] **`__nx_applet_exit_mode`** (`switch_platform.cpp`): libnx crt
-      internal; link verifies it exists in libounce, semantics untested.
-- [ ] **Overclock** (`overclock.cpp`, pcv/clkrst): Switch 1 clock services.
-      Expect silent failure on Switch 2 (no crash expected — `R_FAILED`
-      checks); hiding the UI cell is optional polish.
-- [ ] **nxlink** (`switch_wrapper.c`, DEBUG only): stdout debug should work
-      via socket/bsd as on Switch 1.
-- [ ] **Self-update** (`version.cpp`): `romfsExit()` + nro rename over its
-      own file — verify romfs semantics under libounce.
+Tested on real hardware by the porter — works well overall. Items below are
+unexplored details, not known problems:
+
+- [ ] **4K docked rendering**: the UI renders at the display's native
+      resolution (1080p handheld confirmed). 4K docked performance via
+      Zink/NVK is unmeasured; if heavy, cap the queried resolution to 1080p
+      (one-line change in `glfw_video.cpp`, both `__SWITCH2__` spots).
+- [ ] **Hardware decode**: upstream's ffmpeg is built with `--enable-nvtegra`
+      (Switch 1 NVDEC hwaccel); on Switch 2 the decode service is the new
+      `viddec` (switch2/services/viddec.h). The nvtegra path likely falls
+      back to software decode — fine at 1080p on the A78C; a proper port
+      could wire mpv/ffmpeg to libounce's `VideoDecoder` later.
+- [ ] **pl:u shared fonts** (`switch_font.cpp`, `config.cpp`): CJK text
+      depends on `plGetSharedFontByType`; if shared fonts ever change on a
+      future Switch 2 firmware, bundled fonts in romfs would be the fallback.
+- [ ] **Overclock** (`overclock.cpp`, pcv/clkrst): Switch 1 clock services;
+      expected to fail silently on Switch 2 (`R_FAILED` paths) — hiding the
+      UI cell is optional polish.
 - [ ] **WebApplet browser** (`webPageCreate`): present in libounce headers;
-      runtime behaviour unknown.
+      runtime behaviour unverified.
 - [ ] **libretro-common `features_cpu.c`** hardcodes 4 CPU cores for the
       "number of cores" query; Switch 2 has 8. Cosmetic/threads only.
