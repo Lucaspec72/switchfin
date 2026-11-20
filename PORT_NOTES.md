@@ -41,9 +41,10 @@ containers are `--rm`).
   Switchfin), while the homebrew-menu tile reads **"Switchfin NX2"**
   (NACP name, via a dedicated `NX2_TITLE`). Author (NACP) = **Lucaspec72**.
   Upstream identity/credits elsewhere are untouched.
-- **Version: the port carries its own line, `1.0.0`** (upstream base is
-  0.9.5). NACP/display version = 1.0.0, shown by hbmenu and Settings →
-  About. Tag NX2 releases `v1.0.0`, `v1.0.1`, … — they will always compare
+- **Version: the port carries its own line, currently `1.0.2`** (upstream
+  base is 0.9.5). NACP/display version = 1.0.2, shown by hbmenu and
+  Settings → About. Tag NX2 releases `v1.0.0`, `v1.0.1`, `v1.0.2`, … —
+  they will always compare
   above upstream's 0.x line, and the version can't collide with upstream's
   own numbering.
 - **GitHub links retargeted** (`config.hpp` `git_repo`): Switch 2 builds
@@ -147,6 +148,11 @@ App/borealis C++ source files: **zero changes so far.**
 
 ## Build status log
 
+- **v1.0.2 (2026-11-20): BUILDS** with `ounce-devkit-20261117` — adds the
+  touchscreen fix (`hidSetTouchScreenOutputRanges(1920, 1080)` at the top of
+  `app/src/main.cpp`, `__SWITCH2__`-only, before `brls::Application::init()`).
+  That API landed in libounce on 2026-11-14, so the older `20261114` devkit
+  snapshot cannot build this version; use a devkit from 2026-11-17 or later.
 - **SwitchfinNX2.nro: BUILDS.** `build_ns2/SwitchfinNX2.nro` (~42.7 MB) via
   `.\portns2.ps1 build` (2026-11-17, first try beyond toolchain plumbing:
   one fix needed — the borealis Switch 2 branch needs `-I portlibs/switch/include`
@@ -155,7 +161,7 @@ App/borealis C++ source files: **zero changes so far.**
 - **Link verified** (`nm` on the final ELF): 0 undefined symbols; 384
   mimalloc symbols (so `-lnx` = libounce), 1205 zink/nvk symbols (OunceVK GL
   in the binary), glfw/mpv/egl all present. No deko3d symbols anywhere.
-- **Compile-clean against libounce, zero app source edits:** all of borealis
+- **Compile-clean against libounce (at v1.0.0, zero app source edits):** all of borealis
   `lib/platforms/switch/*` (platform/input/ime/font/audio) and the whole app
   compiled unchanged; libpulsar (audren API) compiles against libounce
   headers too.

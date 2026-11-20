@@ -1,5 +1,9 @@
 #include <borealis.hpp>
 
+#ifdef __SWITCH2__
+#include <switch.h>
+#endif
+
 #include "utils/config.hpp"
 #include "utils/download.hpp"
 #include "utils/thread.hpp"
@@ -40,6 +44,13 @@
 using namespace brls::literals;  // for _i18n
 
 int main(int argc, char* argv[]) {
+#ifdef __SWITCH2__
+    // libounce reports raw touch coordinates at the panel's native resolution;
+    // remap them to 1920x1080 so touches line up with the rendered UI.
+    // Must run before hidInitializeTouchScreen() (done by brls::Application::init()).
+    hidSetTouchScreenOutputRanges(1920, 1080);
+#endif
+
     std::vector<std::string> items;
     for (int i = 1; i < argc; i++) {
         if (std::strcmp(argv[i], "-d") == 0) {

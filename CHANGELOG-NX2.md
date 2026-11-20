@@ -4,6 +4,15 @@ Unofficial Switch 2 port of [Switchfin](https://github.com/dragonflylee/switchfi
 (based on upstream 0.9.5). Ported by Lucaspec72. Version numbering is
 independent from upstream and starts at 1.0.0.
 
+## v1.0.2 (2026-11-20)
+
+### Fixed
+
+- **Touchscreen input mapping**: call `hidSetTouchScreenOutputRanges(1920, 1080)`
+  at startup so touches are reported in the coordinate range the UI expects.
+  Requires a libounce devkit build from 2026-11-14 or later (the older
+  `ounce-devkit-20261114` snapshot predates that API).
+
 ## v1.0.1 (2026-11-17)
 
 ### Added
