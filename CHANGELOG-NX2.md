@@ -4,6 +4,16 @@ Unofficial Switch 2 port of [Switchfin](https://github.com/dragonflylee/switchfi
 (based on upstream 0.9.5). Ported by Lucaspec72. Version numbering is
 independent from upstream and starts at 1.0.0.
 
+## v1.0.3 (2026-11-21)
+
+### Fixed
+
+- **Docked 720p displays**: the UI no longer renders into a 720p crop in the
+  bottom-left corner of the screen. The Switch 2 GLFW window is now always
+  1920x1080 (switch-glfw's fixed framebuffer), letting VI2 scale the full
+  image to whatever display is attached; the previous applet-based resolution
+  query shrank the crop when docked to a 720p TV.
+
 ## v1.0.2 (2026-11-20)
 
 ### Fixed

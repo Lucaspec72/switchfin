@@ -41,9 +41,9 @@ containers are `--rm`).
   Switchfin), while the homebrew-menu tile reads **"Switchfin NX2"**
   (NACP name, via a dedicated `NX2_TITLE`). Author (NACP) = **Lucaspec72**.
   Upstream identity/credits elsewhere are untouched.
-- **Version: the port carries its own line, currently `1.0.2`** (upstream
-  base is 0.9.5). NACP/display version = 1.0.2, shown by hbmenu and
-  Settings → About. Tag NX2 releases `v1.0.0`, `v1.0.1`, `v1.0.2`, … —
+- **Version: the port carries its own line, currently `1.0.3`** (upstream
+  base is 0.9.5). NACP/display version = 1.0.3, shown by hbmenu and
+  Settings → About. Tag NX2 releases `v1.0.0`, `v1.0.1`, `v1.0.2`, `v1.0.3`, … —
   they will always compare
   above upstream's 0.x line, and the version can't collide with upstream's
   own numbering.
@@ -75,16 +75,28 @@ containers are `--rm`).
 
 Upstream's Switch 1 GLFW path renders a fixed 1280x720 window (Switch 1
 panel size) — on the Switch 2's 1080p handheld display that showed up as a
-720p box anchored bottom-left. `borealis .../glfw/glfw_video.cpp` now has a
-`__SWITCH2__` path that mirrors what the Switch 1 deko3d path does:
-- constructor: initial window size = `appletGetDefaultDisplayResolution()`
-  (1080p handheld; whatever the docked display is — up to 4K on Switch 2),
-- `beginFrame()`: polls the same call and `glfwSetWindowSize` on docking
-  changes; the framebuffer-size callback then updates the borealis layout
-  (virtual canvas = native res, scaleFactor 1 — same as docked Switch 1).
-Note: the UI (nanovg over GL) now draws at native resolution; 4K docked
-performance is untested — if it's too heavy, capping the queried resolution
-to 1080p would be a one-line change in the same two spots.
+720p box anchored bottom-left. `borealis .../glfw/glfw_video.cpp` has a
+`__SWITCH2__` path that fixes this:
+- constructor and `beginFrame()`: the GLFW window size is pinned to
+  **1920x1080** (switch-glfw's fixed `FB_WIDTH`/`FB_HEIGHT`). `beginFrame()`
+  still checks each frame and re-applies 1920x1080 if needed, because
+  switch-glfw's own applet hook resizes the window to a hardcoded 1280x720 on
+  undock. The framebuffer-size callback updates the borealis layout (virtual
+  canvas = 1920x1080, scaleFactor 1 — same as docked Switch 1).
+
+Why not `appletGetDefaultDisplayResolution()` (the initial 1.0.0 approach)?
+`switch-glfw`'s Switch backend does **not** resize its framebuffer on
+`glfwSetWindowSize(w, h)` — it hardcodes the native NWindow to 1920x1080 and
+sets a **bottom-left crop** of it (`nwindowSetCrop(nwin, 0, 1080-h, w, 1080)`);
+VI2 scales the whole 1920x1080 framebuffer to the attached display. The applet
+call reports 1280x720 when docked to a 720p TV, so using it sized the crop to
+720p and the UI ended up as a small box in the bottom-left corner — the same
+failure mode as the original hardcoded-720p build. Rendering at the full
+1920x1080 keeps the image filling 720p/1080p/4K displays alike (VI2 does the
+scaling), and avoids asking switch-glfw for a size above its 1920x1080 cap.
+
+Note: the UI (nanovg over GL) draws at 1920x1080; at 4K docked VI2 upscales
+it (native 4K rendering is impossible with switch-glfw's fixed framebuffer).
 - **Graphics: the borealis GLFW + mpv-OpenGL path.** On Switch the borealis
   GLFW branch requests **GL 4.3 core** through devkitPro's `switch-glfw`
   (3.3.4, whose Switch backend needs only `applet*`/`hid*`/`nwindow*`/EGL —
@@ -144,10 +156,17 @@ to 1080p would be a one-line change in the same two spots.
    `CHANGELOG-NX2.md` for port release notes.
 7. `.gitignore`: `build_ns2/`, `ns2/` (cache + build artifacts).
 
-App/borealis C++ source files: **zero changes so far.**
+App/borealis C++ source changes: only `library/borealis .../glfw/glfw_video.cpp`
+(the Switch 2 window-size fix — see the display-resolution section above).
+App source files remain untouched; the app's `CMakeLists.txt` was edited for
+the version lines only.
 
 ## Build status log
 
+- **v1.0.3 (2026-11-21): BUILDS** with `ounce-devkit-20261117` — version bump
+  for the docked-720p display fix (`glfw_video.cpp` pins the GLFW window to
+  switch-glfw's 1920x1080 framebuffer; no `appletGetDefaultDisplayResolution`
+  query). `SwitchfinNX2.nro` rebuilt from a clean `glfw_video.o` recompile.
 - **v1.0.2 (2026-11-20): BUILDS** with `ounce-devkit-20261117` — adds the
   touchscreen fix (`hidSetTouchScreenOutputRanges(1920, 1080)` at the top of
   `app/src/main.cpp`, `__SWITCH2__`-only, before `brls::Application::init()`).
